@@ -46,6 +46,25 @@ const shoes = [
 ];
 
 app.get('/shoes', (req, res) => {
-    res.send();
+    const min = parseFloat(req.query.minPrice);
+    const max = parseFloat(req.query.maxPrice);
+    const typeOf = req.query.type;
+
+
+    const filteredShoes = shoes.filter(shoe => {
+        if(typeOf && typeOf !== shoe.type){
+            return false;
+        }
+        if(!isNaN(min) && shoe.price < min){
+            return false;
+        }
+        if(!isNaN(max) && shoe.price > max){
+            return false;
+        }
+        return true;
+    });
+    const shoesPrint = filteredShoes.map(shoe => `<p>Name: ${shoe.name}, Price: ${shoe.price}, Type: ${shoe.type}</p>`).join('');
+    
+    res.send(`<p> Filtered Shoes ${shoesPrint}`); 
 });
 
